@@ -1,0 +1,372 @@
+/*
+ *  cool.cup
+ *              Parser definition for the COOL language.
+ *
+ */
+
+import java_cup.runtime.*;
+
+import symbolHandling.*;
+import astLexerAndParser.CoolTokenLexer;
+import generalHelpers.*;
+import treeNodes.*;
+
+/* Stuff enclosed in {: :} is copied verbatim to the class containing
+all parser actions.  All the extra variables/functions you want to use
+in the semantic actions should go here.  Don't remove or modify anything
+that was there initially.  */
+
+action code {: 
+
+    int curr_lineno() {
+		return ((CoolTokenLexer) parser.getScanner()).curr_lineno();
+    }
+
+    AbstractSymbol curr_filename() {
+		return ((CoolTokenLexer) parser.getScanner()).curr_filename();
+    }
+:} 
+
+/************************************************************************/
+/*                DONT CHANGE ANYTHING IN THIS SECTION                  */
+
+parser code {:
+    int omerrs = 0;
+
+    public void syntax_error(Symbol cur_token) {
+        int lineno = action_obj.curr_lineno();
+	String filename = action_obj.curr_filename().getString();
+        System.err.print("\"" + filename + "\", line " + lineno + 
+		         ": parse error at or near ");
+        Utilities.printToken(cur_token);
+	omerrs++;
+	if (omerrs>50) {
+	   System.err.println("More than 50 errors");
+	   System.exit(1);
+	}
+    }
+
+    public void unrecovered_syntax_error(Symbol cur_token) {
+    }
+:}
+
+/* Declare the terminals; a few have types for associated lexemes.  The
+token ERROR is never used in the parser; thus, it is a parse error when
+the lexer returns it.  */
+
+terminal CLASS, ELSE, FI, IF, IN, INHERITS, LET, LOOP, POOL, THEN, WHILE;
+terminal CASE, ESAC, OF, DARROW, NEW, ISVOID;
+terminal ASSIGN, NOT, LE, ERROR;
+terminal PLUS, DIV, MINUS, MULT, EQ, LT, DOT, NEG, COMMA, SEMI, COLON;
+terminal LPAREN, RPAREN, AT, LBRACE, RBRACE;
+terminal AbstractSymbol STR_CONST, INT_CONST;
+terminal Boolean BOOL_CONST;
+terminal AbstractSymbol TYPEID, OBJECTID;
+
+/*  DON'T CHANGE ANYTHING ABOVE THIS LINE, OR YOUR PARSER WONT WORK       */
+/**************************************************************************/
+
+   /* Complete the nonterminal list below, giving a type for the semantic
+    * value of each non terminal. (See the CUP documentation for details). 
+    * Please note that "ListNode" is the common classname for all lists.
+    * JavaCup does not support specialized classes such as "ListNode<Class_>".
+    */
+nonterminal Program program;
+nonterminal ListNode class_list;
+nonterminal Class_ class;
+nonterminal ListNode feature_list;
+nonterminal AbstractFeature feature;
+nonterminal Method method;
+nonterminal Attribute attribute;
+nonterminal ListNode formal_list;
+nonterminal Formal formal;
+nonterminal AbstractExpression expr;
+nonterminal ListNode expr_list_comma;
+nonterminal ListNode expr_list_semi;
+nonterminal Dispatch self_dispatch;
+nonterminal Dispatch dispatch;
+nonterminal StaticDispatch static_dispatch;
+nonterminal Assign assignment;
+nonterminal Conditional ifthenelse;
+nonterminal Loop whileloop;
+nonterminal Block block;
+nonterminal Let letstmt;
+nonterminal AbstractExpression let_list;
+nonterminal AbstractExpression opt_init;
+nonterminal CaseExpression case_exp;
+nonterminal ListNode case_list;
+nonterminal New_ new_;
+nonterminal IsVoid isitvoid;
+
+/* Precedence declarations go here. */
+precedence left ASSIGN;
+precedence left NOT;
+precedence left LE,LT,EQ;
+precedence left PLUS,MINUS;
+precedence left MULT,DIV;
+precedence left ISVOID;
+precedence left NEG;
+precedence left AT;
+precedence left DOT;
+
+program	::= 
+	class_list:cl
+	    {: RESULT = new Program(curr_lineno(), cl); :}
+	;
+
+class_list ::= 
+	class:c
+	    {: RESULT = (new ListNode<Class_>(curr_lineno())).appendElement(c); :}
+	| class_list:cl class:c
+	    {: RESULT = cl.appendElement(c); :}
+	;
+
+/* If no parent is specified, the class inherits from the Object class */
+class ::= 
+	CLASS TYPEID:n LBRACE feature_list:f RBRACE SEMI
+	    {: RESULT = new Class_(curr_lineno(), n, AbstractTable.idtable.addString("Object"), f, curr_filename()); :}
+	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE feature_list:f RBRACE SEMI
+	    {: RESULT = new Class_(curr_lineno(), n, p, f, curr_filename()); :}
+	| CLASS error
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	;
+
+/* Feature list may be empty, but no empty features in list. */
+feature_list ::= 
+	/*empty*/
+		{: RESULT = (new ListNode<AbstractFeature>(curr_lineno())); :}
+	|
+	feature_list:fl feature:f SEMI
+		{: RESULT = fl.appendElement(f); :}
+	| error SEMI
+		{: System.err.println("PARSER ERROR: Bad feature definition");:}
+	;
+feature ::= 
+	method:m
+	    {: RESULT = m; :}
+	|
+	attribute:a
+		{: RESULT = a; :}
+	;
+method ::= 
+	OBJECTID:o LPAREN formal_list:formals RPAREN COLON TYPEID:return_type LBRACE expr:e RBRACE 
+		{: RESULT = new Method(curr_lineno(),o,formals,return_type,e); :}
+	|
+	OBJECTID:o LPAREN RPAREN COLON TYPEID:return_type LBRACE expr:e RBRACE 
+		{: RESULT = new Method(curr_lineno(),o,(new ListNode<Formal>(curr_lineno())),return_type,e); :}
+	;
+attribute ::= 
+	OBJECTID:o COLON TYPEID:t
+		{: RESULT= new Attribute(curr_lineno(),o,t,new NoExpression(curr_lineno())); :}
+	|
+	OBJECTID:o COLON TYPEID:t ASSIGN expr:e
+		{: RESULT= new Attribute(curr_lineno(),o,t,e); :}
+	;
+formal_list ::=
+	formal:f
+		{: RESULT = (new ListNode<Formal>(curr_lineno())).appendElement(f); :}
+	|
+	formal_list:fl COMMA formal:f
+		{: RESULT = fl.appendElement(f); :}
+	|
+	error COMMA
+		{: System.err.println("PARSER ERROR: Bad formal definition");:}
+	;
+formal ::= 
+	OBJECTID:o COLON TYPEID:t
+		{: RESULT = new Formal(curr_lineno(),o,t); :}
+	;
+expr_list_comma ::=
+	expr:e 
+		{: RESULT= new ListNode<AbstractExpression>(curr_lineno()).appendElement(e); :}
+	|
+	expr_list_comma:el COMMA expr:e 
+		{: RESULT = el.appendElement(e); :}
+	| error COMMA
+		{: System.err.println("PARSER ERROR: Invalid expression"); :}
+	;
+expr_list_semi ::=
+	expr:e SEMI
+		{: RESULT= new ListNode<AbstractExpression>(curr_lineno()).appendElement(e); :}
+	|
+	expr_list_semi:el expr:e SEMI
+		{: RESULT = el.appendElement(e); :}
+	| error SEMI
+		{: System.err.println("PARSER ERROR: Invalid expression"); :}
+	;
+expr ::= 
+	assignment:a 
+		{: RESULT = a; :}
+	|
+	dispatch:d
+		{: RESULT= d ; :}
+	|
+	static_dispatch:d
+		{: RESULT= d ; :}
+	|
+	self_dispatch:d
+		{: RESULT= d ; :}
+	|
+	ifthenelse:ite
+		{: RESULT = ite; :}
+	|
+	whileloop:w
+		{: RESULT = w; :}
+	|
+	block:b
+		{: RESULT = b; :}
+	|
+	letstmt:l 
+		{: RESULT= l; :}
+	|
+	case_exp:c 
+		{: RESULT = c; :}
+	|
+	new_:n
+		{: RESULT = n; :}
+	|
+	isitvoid:iv
+		{: RESULT = iv; :}
+	|
+	expr:e1 PLUS expr:e2
+		{: RESULT = new Plus(curr_lineno(),e1,e2); :}
+	|
+	expr:e1 MINUS expr:e2
+		{: RESULT = new Sub(curr_lineno(),e1,e2); :}
+	|
+	expr:e1 MULT expr:e2
+		{: RESULT = new Mul(curr_lineno(),e1,e2); :}
+	|
+	expr:e1 DIV expr:e2
+		{: RESULT = new Divide(curr_lineno(),e1,e2); :}
+	|
+	NEG expr:e
+		{:  RESULT = new Negate(curr_lineno(),e); :}
+	|
+	expr:e1 LT expr:e2
+		{: RESULT = new Lt(curr_lineno(),e1,e2); :}
+	|
+	expr:e1 LE expr:e2
+		{: RESULT = new Leq(curr_lineno(),e1,e2); :}
+	|
+	expr:e1 EQ expr:e2
+		{: RESULT = new Eq(curr_lineno(),e1,e2); :}
+	|
+	NOT expr:e
+		{:  RESULT = new Complement(curr_lineno(),e); :}
+	|
+	LPAREN expr:e RPAREN
+		{: RESULT = e ; :}
+	|
+	OBJECTID:o 
+		{: RESULT = new Object_(curr_lineno(), AbstractTable.idtable.addString(o.getString()));  :}
+	|
+	INT_CONST:i 
+		{: RESULT = new IntegerConstant(curr_lineno(),i); :}
+	|
+	STR_CONST:s
+		{: RESULT = new StringConstant(curr_lineno(),s); :}
+	|
+	BOOL_CONST:b
+		{: RESULT = new BoolConstant(curr_lineno(),b); :}
+	;
+assignment ::=
+	OBJECTID:o ASSIGN expr:e
+		{: RESULT = new Assign(curr_lineno(),o,e); :}
+	| OBJECTID:o ASSIGN error
+		{: System.err.println("PARSER ERROR: Invalid assignment statement to "+o.toString()); :}
+	;
+dispatch ::= 
+	expr:e DOT OBJECTID:o LPAREN expr_list_comma:el RPAREN
+		{: RESULT = new Dispatch(curr_lineno(), e, o, el); :}
+	|
+	expr:e DOT OBJECTID:o LPAREN RPAREN
+		{: RESULT = new Dispatch(curr_lineno(), e, o, new ListNode<AbstractExpression>(curr_lineno())); :}
+	;
+self_dispatch ::= 
+	OBJECTID:o LPAREN expr_list_comma:el RPAREN
+		{: RESULT = new Dispatch(curr_lineno(), new Object_(curr_lineno(), AbstractTable.idtable.addString("self")), o, el); :}
+	|
+	OBJECTID:o LPAREN RPAREN
+		{: RESULT = new Dispatch(curr_lineno(), new Object_(curr_lineno(), AbstractTable.idtable.addString("self")), o, new ListNode<AbstractExpression>(curr_lineno())); :}
+	;
+static_dispatch ::= 
+	expr:e AT TYPEID:t DOT OBJECTID:o LPAREN expr_list_comma:el RPAREN
+		{:RESULT = new StaticDispatch(curr_lineno(), e, t, o, el); :}
+	|
+	expr:e AT TYPEID:t DOT OBJECTID:o LPAREN RPAREN
+		{:RESULT = new StaticDispatch(curr_lineno(), e, t, o, new ListNode<AbstractExpression>(curr_lineno())); :}
+	;
+ifthenelse::=
+	IF expr:p THEN expr:t ELSE expr:e FI
+		{: RESULT = new Conditional(curr_lineno(),p,t,e); :}
+	|
+	IF error
+		{: System.err.println("PARSER ERROR: Invalid if statement");:}
+	;
+whileloop::=
+	WHILE expr:p LOOP expr:b POOL
+		{: RESULT = new Loop(curr_lineno(),p,b); :}
+	|
+	WHILE error
+		{: System.err.println("PARSER ERROR: Invalid while loop");:}
+	;
+block ::=
+	LBRACE expr_list_semi:el RBRACE
+		{: RESULT = new Block(curr_lineno(),el); :}
+	|
+	LBRACE error RBRACE
+		{: System.err.println("PARSER ERROR: Invalid code block");:}
+	;
+new_::=
+	NEW TYPEID:t
+		{: RESULT = new New_(curr_lineno(),t); :}
+	| 
+	NEW error
+		{: System.err.println("PARSER ERROR: Invalid new statement");:}
+	;
+isitvoid::=
+	ISVOID expr:e
+		{: RESULT = new IsVoid(curr_lineno(),e); :}
+	| 
+	ISVOID error
+		{: System.err.println("PARSER ERROR: Invalid isvoid statement");:}
+	;
+case_exp::=
+	CASE expr:e OF case_list:cl ESAC
+		{: RESULT = new CaseExpression(curr_lineno(),e,cl); :}
+	| 
+	CASE error
+		{: System.err.println("PARSER ERROR: Invalid case statement");:}
+	;
+case_list::=
+	OBJECTID:o COLON TYPEID:t DARROW expr:e SEMI
+		{: RESULT=new ListNode<Branch>(curr_lineno()).appendElement(new Branch(curr_lineno(),o,t,e)); :}
+	|
+	case_list:cl OBJECTID:o COLON TYPEID:t DARROW expr:e SEMI
+		{: RESULT=cl.appendElement(new Branch(curr_lineno(),o,t,e)); :}
+	;
+letstmt::=
+	LET OBJECTID:o COLON TYPEID:t opt_init:i IN expr:b
+		{: RESULT=new Let(curr_lineno(),o,t,i,b); :}
+	|
+	LET OBJECTID:o COLON TYPEID:t opt_init:i let_list:ll
+		{: RESULT=new Let(curr_lineno(),o,t,i,ll); :}
+	|
+	LET error
+		{: System.err.println("PARSER ERROR: Invalid let statement");:}
+	;
+let_list::=
+	COMMA OBJECTID:o COLON TYPEID:t opt_init:i IN expr:b
+		{: RESULT= new Let(curr_lineno(),o,t,i,b); :}
+	|
+	COMMA OBJECTID:o COLON TYPEID:t opt_init:i let_list:ll
+		{: RESULT= new Let(curr_lineno(),o,t,i,ll); :}
+	;
+opt_init::=
+	/*nothing*/
+		{: RESULT = new NoExpression(curr_lineno());:}
+	|
+		ASSIGN expr:e
+			{: RESULT = e; :}
+	;
