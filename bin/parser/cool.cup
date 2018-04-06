@@ -127,19 +127,38 @@ class ::=
 	    {: RESULT = new Class_(curr_lineno(), n, AbstractTable.idtable.addString("Object"), f, curr_filename()); :}
 	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE feature_list:f RBRACE SEMI
 	    {: RESULT = new Class_(curr_lineno(), n, p, f, curr_filename()); :}
-	| CLASS error
+	| CLASS TYPEID:n LBRACE RBRACE SEMI
+	    {: RESULT = new Class_(curr_lineno(), n, AbstractTable.idtable.addString("Object"), new ListNode<AbstractFeature>(curr_lineno()), curr_filename()); :}
+	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE RBRACE SEMI
+	    {: RESULT = new Class_(curr_lineno(), n, p, new ListNode<AbstractFeature>(curr_lineno()), curr_filename()); :}
+	| CLASS TYPEID LBRACE error RBRACE SEMI
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	| CLASS LBRACE error RBRACE SEMI
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	| CLASS error RBRACE SEMI
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	| CLASS TYPEID INHERITS TYPEID LBRACE error RBRACE SEMI
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	| CLASS TYPEID INHERITS TYPEID error RBRACE SEMI
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	| CLASS TYPEID INHERITS error RBRACE SEMI
+		{: System.err.println("PARSER ERROR: Bad class definition");:}
+	| CLASS TYPEID error RBRACE SEMI
 		{: System.err.println("PARSER ERROR: Bad class definition");:}
 	;
 
-/* Feature list may be empty, but no empty features in list. */
 feature_list ::= 
-	/*empty*/
-		{: RESULT = (new ListNode<AbstractFeature>(curr_lineno())); :}
+	feature:f SEMI
+		{:RESULT=new ListNode<AbstractFeature>(curr_lineno()).appendElement(f);:}
 	|
 	feature_list:fl feature:f SEMI
 		{: RESULT = fl.appendElement(f); :}
 	| error SEMI
-		{: System.err.println("PARSER ERROR: Bad feature definition");:}
+		{: System.err.println("PARSER ERROR: Bad feature definition");RESULT=new ListNode<AbstractFeature>(curr_lineno());:}
+	| feature_list:fl error SEMI
+		{: System.err.println("PARSER ERROR: Bad feature definition");RESULT = fl;:}
+	| error feature:f SEMI
+		{: System.err.println("PARSER ERROR: Bad feature definition");RESULT=new ListNode<AbstractFeature>(curr_lineno()).appendElement(f);:}
 	;
 feature ::= 
 	method:m
@@ -192,7 +211,11 @@ expr_list_semi ::=
 	expr_list_semi:el expr:e SEMI
 		{: RESULT = el.appendElement(e); :}
 	| error SEMI
-		{: System.err.println("PARSER ERROR: Invalid expression"); :}
+		{: System.err.println("PARSER ERROR: Invalid expression"); RESULT= new ListNode<AbstractExpression>(curr_lineno()); :}
+	| expr_list_semi:el error SEMI
+		{: System.err.println("PARSER ERROR: Invalid expression"); RESULT= el; :}
+	| error expr:e SEMI
+		{: System.err.println("PARSER ERROR: Invalid expression"); RESULT= new ListNode<AbstractExpression>(curr_lineno()).appendElement(e); :}
 	;
 expr ::= 
 	assignment:a 
@@ -316,7 +339,7 @@ block ::=
 		{: RESULT = new Block(curr_lineno(),el); :}
 	|
 	LBRACE error RBRACE
-		{: System.err.println("PARSER ERROR: Invalid code block");:}
+		{: System.err.println("PARSER ERROR: Invalid code block"); :}
 	;
 new_::=
 	NEW TYPEID:t
