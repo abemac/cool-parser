@@ -94,30 +94,5 @@ class Dog {
     };
 };
 class Empty {
-   a
-};
-
-class Another{
-    a:String;
-    d;
-    b:String <- *;
-
-    hi():Object{
-        {
-            2^@345!@5mm;
-            "red";
-        }
-    };
-};
-class Dog {
-    name:String;
-    color:String <- "Blue";
-
-    test():Object{
-       "hi"
-    };
-};
-class Hi{
-    name:String<-4
-    %$@#$%
+   
 };

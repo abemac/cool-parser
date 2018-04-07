@@ -377,7 +377,7 @@ letstmt::=
 		{: RESULT=new Let(curr_lineno(),o,t,i,ll); :}
 	|
 	LET error
-		{: System.err.println("PARSER ERROR: Invalid let statement");:}
+		{: System.err.println("PARSER ERROR: Invalid let statement"); :}
 	;
 let_list::=
 	COMMA OBJECTID:o COLON TYPEID:t opt_init:i IN expr:b
@@ -385,6 +385,12 @@ let_list::=
 	|
 	COMMA OBJECTID:o COLON TYPEID:t opt_init:i let_list:ll
 		{: RESULT= new Let(curr_lineno(),o,t,i,ll); :}
+	|
+	COMMA error let_list:ll
+		{: System.err.println("PARSER ERROR: Invalid let initialization"); RESULT= ll; :}
+	|
+	COMMA let_list:ll error IN
+		{: System.err.println("PARSER ERROR: Invalid let initialization"); RESULT= ll; :}
 	;
 opt_init::=
 	/*nothing*/

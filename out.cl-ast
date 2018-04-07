@@ -1,15 +1,31 @@
-LEXICAL ERROR: Invalid character(s): line 107: ^
-LEXICAL ERROR: Invalid character(s): line 107: !
-LEXICAL ERROR: Invalid character(s): line 122: %$
-LEXICAL ERROR: Invalid character(s): line 122: #$%
-"/home/abraham/eclipse-workspace/Phase3/test.cl", line 98: parse error at or near '}'
+LEXICAL ERROR: Invalid character(s): line 12: ^
+LEXICAL ERROR: Invalid character(s): line 12: !
+LEXICAL ERROR: Invalid character(s): line 14: ?
+LEXICAL ERROR: Invalid character(s): line 33: %$
+LEXICAL ERROR: Invalid character(s): line 33: #$%
+LEXICAL ERROR: Invalid character(s): line 47: %$
+LEXICAL ERROR: Invalid character(s): line 47: #$%
+LEXICAL ERROR: Invalid character(s): line 52: !#$
+LEXICAL ERROR: Invalid character(s): line 56: %$
+LEXICAL ERROR: Invalid character(s): line 56: #$%
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 3: parse error at or near '}'
 PARSER ERROR: Bad class definition
-"/home/abraham/eclipse-workspace/Phase3/test.cl", line 102: parse error at or near ';'
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 7: parse error at or near ';'
 PARSER ERROR: Bad feature definition
-"/home/abraham/eclipse-workspace/Phase3/test.cl", line 103: parse error at or near '*'
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 8: parse error at or near '*'
 PARSER ERROR: Bad feature definition
-"/home/abraham/eclipse-workspace/Phase3/test.cl", line 107: parse error at or near ERROR = ""
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 12: parse error at or near ERROR = ""
 PARSER ERROR: Invalid expression
-"/home/abraham/eclipse-workspace/Phase3/test.cl", line 122: parse error at or near ERROR = ""
-PARSER ERROR: Bad class definition
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 14: parse error at or near ERROR = ""
+PARSER ERROR: Invalid expression
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 33: parse error at or near ERROR = ""
+PARSER ERROR: Bad feature definition
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 47: parse error at or near ERROR = ""
+PARSER ERROR: Bad feature definition
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 52: parse error at or near '*'
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 52: parse error at or near ERROR = ""
+PARSER ERROR: Invalid let initialization
+PARSER ERROR: Invalid let initialization
+"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 56: parse error at or near ERROR = ""
+PARSER ERROR: Invalid expression
 Compilation halted due to lex and parse errors
