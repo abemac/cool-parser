@@ -1,5 +1,8 @@
 package semanticAnalyzer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /*
  Copyright (c) 2000 The Regents of the University of California.
  All rights reserved.
@@ -27,19 +30,98 @@ import generalHelpers.ListNode;
 import generalHelpers.TreeConstants;
 import symbolHandling.AbstractSymbol;
 import symbolHandling.AbstractTable;
-import treeNodes.*;
+import treeNodes.AbstractFeature;
+import treeNodes.Attribute;
+import treeNodes.Class_;
+import treeNodes.Formal;
+import treeNodes.Method;
+import treeNodes.NoExpression;
 
 /**
  * This class may be used to contain the semantic information such as the
  * inheritance graph. You may use it or not as you like: it is only here to
  * provide a container for the supplied Methods.
  */
+class Node{
+	public ArrayList<String> children;
+	public String parent;
+	public boolean visited;
+	public Class_ c;
+	public Node(Class_ c) {
+		this.children=new ArrayList<String>();
+		this.parent="Object";
+		visited=false;
+		this.c = c;
+	}
+}
+
 public class ClassTable {
 
-	public ClassTable(ListNode<Class_> cls) {
-
+	private HashMap<String,Node> classes;
+	public ClassTable(ListNode<Class_> cls) throws SemanticError {
+		classes=new HashMap<String,Node>();
 		// TODO: do some work here
-	
+		installBasicClasses();
+		
+		//first pass - add all classes and set their parents
+		for(Class_ c: cls) {
+			String key=c.getName().getString();
+			String par=c.getParent().getString();
+			
+			if (key.equals(par)) {
+				throw new SemanticError("Class cannot inherit itself");
+			}
+			else if(par.equals("Int")) {
+				throw new SemanticError("Class cannot inherit Int");
+			}
+			else if(par.equals("Bool")) {
+				throw new SemanticError("Class cannot inherit Bool");
+			} 
+			else if(par.equals("String")) {
+				throw new SemanticError("Class cannot inherit String");
+			}
+			if(!classes.containsKey(key)) {
+				classes.put(key, new Node(c) {{parent=par;}});
+			}else {
+				throw new SemanticError("Duplicate definition of class "+key);
+			}
+		}
+		
+		//second pass - detect children
+		for(String key : classes.keySet()) {
+			if (!key.equals("Object")) {
+				String par=classes.get(key).c.getParent().getString();
+				
+				if(!classes.containsKey(par)) {
+					throw new SemanticError("Parent class "+par+" does not exist");
+				}else {
+					classes.get(par).children.add(key);
+				}
+			}
+		}
+		
+		//check for cycles
+		ArrayList<String> queue = new ArrayList<String>();
+		queue.add("Object");
+		while(!queue.isEmpty()) {
+			String current = queue.remove(0);
+			Node n = classes.get(current);
+			
+			if(n.visited) {
+				throw new SemanticError("Cycle in inheritance graph: "+current+" is both a parent and child" );
+			}
+			else {
+				n.visited=true;
+				queue.addAll(n.children);
+			}
+		}
+		for(String k : classes.keySet()) {
+			if(!classes.get(k).visited) {
+				throw new SemanticError(k+" not inherited from object - inheritance cycle(s) present");
+			}
+		}
+		
+		
 	}
 
 	/**
@@ -181,5 +263,10 @@ public class ClassTable {
 				filename);
 
 		// TODO: Here should go some code to use the Class_-objects defined
+		classes.put("Object", new Node(Object_class));
+		classes.put("IO", new Node(IO_class));
+		classes.put("Int", new Node(Int_class));
+		classes.put("Bool", new Node(Bool_class));
+		classes.put("String", new Node(Str_class));
 	}
 }

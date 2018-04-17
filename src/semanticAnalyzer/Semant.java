@@ -1,15 +1,12 @@
 package semanticAnalyzer;
 
-import testEnvironment.CoolCompiler;
-import treeNodes.Program;
-import generalHelpers.Flags;
-
 import java.io.OutputStreamWriter;
 
-import parser.SolutionParserFactory;
-import parser.SolutionStudentParserFactory;
-
-import lexer.SolutionLexerFactory;
+import generalHelpers.Flags;
+import lexer.StudentLexerFactory;
+import parser.StudentParserFactory;
+import testEnvironment.CoolCompiler;
+import treeNodes.Program;
 
 /*
  Copyright (c) 2000 The Regents of the University of California.
@@ -46,8 +43,8 @@ public class Semant {
 	public static void main(String[] args) {
 		args = Flags.handleFlags(args);
 		try {
-			Program result = CoolCompiler.lexAndParseToStudentAST(new SolutionLexerFactory(), 
-					new SolutionStudentParserFactory(), 
+			Program result = CoolCompiler.lexAndParseToStudentAST(new StudentLexerFactory(), 
+					new StudentParserFactory(), 
 					args);
 			
 			// The call to the semantic analyzer
@@ -58,7 +55,8 @@ public class Semant {
 			out.flush();
 			out.close();
 		} catch (SemanticError e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
+			System.err.println("Semantic errors occured");
 		} catch (Exception ex) {
 			ex.printStackTrace(System.err);
 		}

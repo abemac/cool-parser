@@ -1,13 +1,16 @@
 package treeNodes;
 
-import generalHelpers.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import generalHelpers.ListNode;
+import generalHelpers.TreeNode;
+import generalHelpers.Utilities;
 import semanticAnalyzer.ClassTable;
+import semanticAnalyzer.Info;
 import semanticAnalyzer.SemanticError;
+import symbolHandling.SymbolTable;
 
 
 
@@ -74,6 +77,9 @@ public class Program extends TreeNode {
 		ClassTable classTable = new ClassTable(classes);
 
 		/* TODO: some semantic analysis code may go here */
+		for (Class_ c : classes) {
+			c.semant(new SymbolTable<Info>(), classTable, c);
+		}
 
 		SemanticError.exitIfErrorsOccured();
 	}

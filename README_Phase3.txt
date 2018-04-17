@@ -9,6 +9,12 @@ so we had to modify TokenContants.java to have the correct values. For this reas
 we have included our entire Eclipse project for you to run. You can either make a
 run configuration manually, or run the build.xml ant file with target="Parser".
 
+The above steps will run "test.cl" . This file contains tests for all the features 
+in the rubric.
+
+For error catching, an example of it in action can be seen by running "test-errors.cl"
+This can be done from the bin directory by:
+java parser.Parser ../test-errors.cl
 WRITE UP (first due date):
 
 We made a complete grammer specification for COOL. To do this, we 
@@ -34,3 +40,19 @@ To test our parser, we used our programs from project 1, the example programs
 from project 2, and also some simple programs we wrote to test specific
 features. In all cases, our parser matches the solution parser exactly.
 It only differs in the error messages produces if the input is invalid.
+
+WRITE UP (second due date):
+
+We completed most our work for the second due date for during the first due date,
+so see the previous write up (above) for most of our design process.
+
+For this phase, we did have to add error handling using the "error" non terminal.
+We found this a bit tricky to use, with unexpected behavoir sometimes. However,
+We have used it in a way that meets the minimum requirements listed on the rubric
+for error handling, and also have used it in other places to handle as many
+errors gracefully as possible. See our cool.cup file, and wherever we have 
+System.err.println(), we have used the error handling non terminal. For example,
+in addition to the minimun requirments, we have also implemented error handling for
+if statements, while loops, assignment statements, and others.
+
+Our error handling can be tested by running "test-errors.cl" 

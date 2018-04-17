@@ -1,13 +1,16 @@
 package treeNodes;
 
 
-import generalHelpers.*;
-
 import java.io.IOException;
 import java.io.Writer;
 
-
+import generalHelpers.ListNode;
+import generalHelpers.TreeNode;
+import generalHelpers.Utilities;
+import semanticAnalyzer.ClassTable;
+import semanticAnalyzer.Info;
 import symbolHandling.AbstractSymbol;
+import symbolHandling.SymbolTable;
 
 /** Defines AST constructor 'class_'.
     <p>
@@ -68,6 +71,10 @@ public class Class_ extends TreeNode {
 	}
 	public AbstractSymbol getParent() {
 		return parent;
+	}
+	
+	public void semant(SymbolTable<Info> info, ClassTable ct, Class_ c) {
+		
 	}
 }
 

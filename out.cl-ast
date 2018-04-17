@@ -1,31 +1,731 @@
-LEXICAL ERROR: Invalid character(s): line 12: ^
-LEXICAL ERROR: Invalid character(s): line 12: !
-LEXICAL ERROR: Invalid character(s): line 14: ?
-LEXICAL ERROR: Invalid character(s): line 33: %$
-LEXICAL ERROR: Invalid character(s): line 33: #$%
-LEXICAL ERROR: Invalid character(s): line 47: %$
-LEXICAL ERROR: Invalid character(s): line 47: #$%
-LEXICAL ERROR: Invalid character(s): line 52: !#$
-LEXICAL ERROR: Invalid character(s): line 56: %$
-LEXICAL ERROR: Invalid character(s): line 56: #$%
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 3: parse error at or near '}'
-PARSER ERROR: Bad class definition
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 7: parse error at or near ';'
-PARSER ERROR: Bad feature definition
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 8: parse error at or near '*'
-PARSER ERROR: Bad feature definition
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 12: parse error at or near ERROR = ""
-PARSER ERROR: Invalid expression
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 14: parse error at or near ERROR = ""
-PARSER ERROR: Invalid expression
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 33: parse error at or near ERROR = ""
-PARSER ERROR: Bad feature definition
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 47: parse error at or near ERROR = ""
-PARSER ERROR: Bad feature definition
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 52: parse error at or near '*'
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 52: parse error at or near ERROR = ""
-PARSER ERROR: Invalid let initialization
-PARSER ERROR: Invalid let initialization
-"/home/abraham/eclipse-workspace/Phase3/test-errors.cl", line 56: parse error at or near ERROR = ""
-PARSER ERROR: Invalid expression
-Compilation halted due to lex and parse errors
+#98
+_program
+ #88
+ _class
+   Main
+   IO
+   "/home/abraham/eclipse-workspace/Phase3/test.cl"
+   (
+   #72
+   _method
+     main
+     SELF_TYPE
+     #72
+     _block
+       #4
+       _dispatch
+         #4
+         _object
+           self
+         : _no_type
+         out_string
+         (
+         #4
+         _string
+           "hello\n"
+         : _no_type
+         )
+       : _no_type
+       #5
+       _static_dispatch
+         #5
+         _object
+           d
+         : _no_type
+         Dog
+         test
+         (
+         )
+       : _no_type
+       #6
+       _dispatch
+         #6
+         _object
+           d
+         : _no_type
+         test
+         (
+         )
+       : _no_type
+       #7
+       _dispatch
+         #7
+         _object
+           d
+         : _no_type
+         test
+         (
+         #7
+         _string
+           "hello"
+         : _no_type
+         )
+       : _no_type
+       #8
+       _assign
+         x
+         #8
+         _new
+           Dog
+         : _no_type
+       : _no_type
+       #9
+       _cond
+         #9
+         _isvoid
+           #9
+           _object
+             dog
+           : _no_type
+         : _no_type
+         #9
+         _dispatch
+           #9
+           _object
+             d
+           : _no_type
+           test
+           (
+           )
+         : _no_type
+         #9
+         _dispatch
+           #9
+           _object
+             d
+           : _no_type
+           eat
+           (
+           )
+         : _no_type
+       : _no_type
+       #10
+       _isvoid
+         #10
+         _object
+           dog
+         : _no_type
+       : _no_type
+       #11
+       _cond
+         #11
+         _isvoid
+           #11
+           _object
+             dog
+           : _no_type
+         : _no_type
+         #11
+         _dispatch
+           #11
+           _object
+             dog
+           : _no_type
+           bark
+           (
+           )
+         : _no_type
+         #11
+         _dispatch
+           #11
+           _object
+             self
+           : _no_type
+           out_string
+           (
+           #11
+           _string
+             "no dog"
+           : _no_type
+           )
+         : _no_type
+       : _no_type
+       #12
+       _plus
+         #12
+         _object
+           dog
+         : _no_type
+         #12
+         _object
+           cat
+         : _no_type
+       : _no_type
+       #13
+       _sub
+         #13
+         _object
+           dog
+         : _no_type
+         #13
+         _object
+           cat
+         : _no_type
+       : _no_type
+       #14
+       _mul
+         #14
+         _object
+           dog
+         : _no_type
+         #14
+         _object
+           cat
+         : _no_type
+       : _no_type
+       #15
+       _divide
+         #15
+         _object
+           dog
+         : _no_type
+         #15
+         _object
+           cat
+         : _no_type
+       : _no_type
+       #16
+       _sub
+         #16
+         _plus
+           #16
+           _object
+             d
+           : _no_type
+           #16
+           _mul
+             #16
+             _object
+               c
+             : _no_type
+             #16
+             _object
+               a
+             : _no_type
+           : _no_type
+         : _no_type
+         #16
+         _divide
+           #16
+           _object
+             r
+           : _no_type
+           #16
+           _object
+             w
+           : _no_type
+         : _no_type
+       : _no_type
+       #17
+       _neg
+         #17
+         _object
+           dog
+         : _no_type
+       : _no_type
+       #18
+       _lt
+         #18
+         _object
+           dog
+         : _no_type
+         #18
+         _object
+           cat
+         : _no_type
+       : _no_type
+       #19
+       _leq
+         #19
+         _object
+           cat
+         : _no_type
+         #19
+         _object
+           dog
+         : _no_type
+       : _no_type
+       #20
+       _eq
+         #20
+         _object
+           cat
+         : _no_type
+         #20
+         _object
+           dog
+         : _no_type
+       : _no_type
+       #21
+       _comp
+         #21
+         _object
+           dog
+         : _no_type
+       : _no_type
+       #22
+       _dispatch
+         #22
+         _object
+           d
+         : _no_type
+         speak
+         (
+         )
+       : _no_type
+       #23
+       _int
+         5
+       : _no_type
+       #24
+       _int
+         3
+       : _no_type
+       #25
+       _plus
+         #25
+         _int
+           4
+         : _no_type
+         #25
+         _int
+           3
+         : _no_type
+       : _no_type
+       #26
+       _divide
+         #26
+         _int
+           3
+         : _no_type
+         #26
+         _int
+           2
+         : _no_type
+       : _no_type
+       #27
+       _cond
+         #27
+         _bool
+           1
+         : _no_type
+         #27
+         _dispatch
+           #27
+           _object
+             dog
+           : _no_type
+           bark
+           (
+           )
+         : _no_type
+         #27
+         _block
+           #27
+           _string
+             "do nothing"
+           : _no_type
+         : _no_type
+       : _no_type
+       #28
+       _cond
+         #28
+         _bool
+           0
+         : _no_type
+         #28
+         _dispatch
+           #28
+           _object
+             dog
+           : _no_type
+           bark
+           (
+           )
+         : _no_type
+         #28
+         _block
+           #28
+           _string
+             "do nothing"
+           : _no_type
+         : _no_type
+       : _no_type
+       #29
+       _bool
+         1
+       : _no_type
+       #30
+       _bool
+         0
+       : _no_type
+       #34
+       _typcase
+         #32
+         _object
+           dog
+         : _no_type
+         #34
+         _branch
+           gr
+           GoldenRet
+           #33
+           _dispatch
+             #33
+             _object
+               self
+             : _no_type
+             out_string
+             (
+             #33
+             _string
+               "golden retriver"
+             : _no_type
+             )
+           : _no_type
+       : _no_type
+       #40
+       _typcase
+         #36
+         _object
+           dog
+         : _no_type
+         #38
+         _branch
+           gr
+           GoldenRet
+           #37
+           _dispatch
+             #37
+             _object
+               self
+             : _no_type
+             out_string
+             (
+             #37
+             _string
+               "golden retriver"
+             : _no_type
+             )
+           : _no_type
+         #39
+         _branch
+           dh
+           Daschound
+           #38
+           _dispatch
+             #38
+             _object
+               self
+             : _no_type
+             out_string
+             (
+             #38
+             _string
+               "dashound"
+             : _no_type
+             )
+           : _no_type
+         #40
+         _branch
+           l
+           Labrador
+           #39
+           _dispatch
+             #39
+             _object
+               self
+             : _no_type
+             out_string
+             (
+             #39
+             _string
+               "labrador"
+             : _no_type
+             )
+           : _no_type
+       : _no_type
+       #45
+       _let
+         bob
+         String
+         #42
+         _no_expr
+         : _no_type
+         #45
+         _let
+           joe
+           String
+           #42
+           _string
+             "Joesph"
+           : _no_type
+           #45
+           _let
+             bob
+             Cat
+             #42
+             _string
+               "Joesph"
+             : _no_type
+             #45
+             _block
+               #43
+               _assign
+                 bob
+                 #43
+                 _string
+                   "Hello"
+                 : _no_type
+               : _no_type
+               #44
+               _dispatch
+                 #44
+                 _object
+                   self
+                 : _no_type
+                 out_string
+                 (
+                 #44
+                 _object
+                   bob
+                 : _no_type
+                 )
+               : _no_type
+             : _no_type
+           : _no_type
+         : _no_type
+       : _no_type
+       #59
+       _cond
+         #47
+         _object
+           bob
+         : _no_type
+         #49
+         _block
+           #48
+           _dispatch
+             #48
+             _object
+               self
+             : _no_type
+             yell
+             (
+             #48
+             _string
+               "bob"
+             : _no_type
+             )
+           : _no_type
+         : _no_type
+         #59
+         _block
+           #57
+           _cond
+             #50
+             _object
+               joe
+             : _no_type
+             #52
+             _block
+               #51
+               _dispatch
+                 #51
+                 _object
+                   self
+                 : _no_type
+                 yell
+                 (
+                 #51
+                 _string
+                   "Asdfasdf"
+                 : _no_type
+                 )
+               : _no_type
+             : _no_type
+             #57
+             _block
+               #55
+               _loop
+                 #53
+                 _lt
+                   #53
+                   _object
+                     x
+                   : _no_type
+                   #53
+                   _int
+                     4
+                   : _no_type
+                 : _no_type
+                 #55
+                 _block
+                   #54
+                   _assign
+                     x
+                     #54
+                     _plus
+                       #54
+                       _object
+                         x
+                       : _no_type
+                       #54
+                       _int
+                         1
+                       : _no_type
+                     : _no_type
+                   : _no_type
+                 : _no_type
+               : _no_type
+             : _no_type
+           : _no_type
+         : _no_type
+       : _no_type
+       #60
+       _assign
+         x
+         #60
+         _int
+           3
+         : _no_type
+       : _no_type
+       #61
+       _cond
+         #61
+         _object
+           da
+         : _no_type
+         #61
+         _string
+           "hello4"
+         : _no_type
+         #61
+         _string
+           "goodbye"
+         : _no_type
+       : _no_type
+     : _no_type
+   #77
+   _method
+     eat
+     #73
+     _formal
+       d
+       Dog
+     Object
+     #77
+     _let
+       x
+       Dog
+       #74
+       _no_expr
+       : _no_type
+       #77
+       _block
+         #75
+         _string
+           "nothing"
+         : _no_type
+       : _no_type
+     : _no_type
+   #86
+   _method
+     eat2
+     #78
+     _formal
+       d
+       Dog
+     #78
+     _formal
+       c
+       Dog
+     Object
+     #86
+     _block
+       #80
+       _static_dispatch
+         #80
+         _object
+           d
+         : _no_type
+         Dog
+         test
+         (
+         )
+       : _no_type
+       #81
+       _dispatch
+         #81
+         _object
+           d
+         : _no_type
+         test
+         (
+         )
+       : _no_type
+       #82
+       _dispatch
+         #82
+         _object
+           d
+         : _no_type
+         test
+         (
+         #82
+         _string
+           "hello"
+         : _no_type
+         )
+       : _no_type
+       #83
+       _assign
+         x
+         #83
+         _new
+           Dog
+         : _no_type
+       : _no_type
+     : _no_type
+   )
+ #96
+ _class
+   Dog
+   Object
+   "/home/abraham/eclipse-workspace/Phase3/test.cl"
+   (
+   #89
+   _attr
+     name
+     String
+     #89
+     _no_expr
+     : _no_type
+   #90
+   _attr
+     color
+     String
+     #90
+     _string
+       "Blue"
+     : _no_type
+   #94
+   _method
+     test
+     Object
+     #94
+     _assign
+       name
+       #94
+       _string
+         "Buddy"
+       : _no_type
+     : _no_type
+   )
+ #98
+ _class
+   Empty
+   Object
+   "/home/abraham/eclipse-workspace/Phase3/test.cl"
+   (
+   )
